@@ -14,6 +14,15 @@ import urllib.request as urllib2
 import cartopy.crs as ccrs
 
 def generate_timestamps(start,end,minutes=10):
+	"""
+        Function to generate epoch timestamps in the specific interval based on input start date, end date and interval minutes
+            Parameters:
+                start (str): Start date of the ISS track
+                end (str): End date of the ISS track
+		minutes (int): This is an optional argument. If not provided, default value will be considered. This is the interval time (in minutes) which user needs to retrieve location.
+            Returns:
+                timestamps: Timestamps in epoch  
+	"""
 	start_epoch=int(start.timestamp())
 	end_epoch=int(end.timestamp())
 	time_span_in_seconds=end_epoch-start_epoch
@@ -21,23 +30,59 @@ def generate_timestamps(start,end,minutes=10):
 	return timestamps
 
 def split_timestamps(array):
+	"""
+        Function to split epoch timestamps (generated from generate_timestamps function) in the sets of 10. This is because API takes maximum 10 timestamps to retrieve location at one go.
+            Parameters:
+                array: Array contains the list of timestamps 
+            Returns:
+                split_time: Array contains the timestamps in the sets of 10
+	"""
 	split_time_id=np.arange(1,len(array),10)
 	split_time_id=np.append(split_time_id,len(array))-1
 	split_time=[array[split_time_id[i]:split_time_id[i+1]] for i in range(len(split_time_id)-1)]
 	return split_time
 	
 def generate_urls(split_time):
+	"""
+        Function to generate URLs based on array which is in the sets of 10
+            Parameters:
+                split_time: Array contains the timestamps in the sets of 10
+            Returns:
+                track_url: List of all URLs which is going to be used to retrieve locations
+	"""
 	out1=[str(split_time[i].tolist())[1:-1].replace(' ','') for  i in range(len(split_time))]
-	out2=['https://api.wheretheiss.at/v1/satellites/25544/positions?timestamps=%s&units=miles'%i for i in out1]
-	return out1,out2
+	track_url=['https://api.wheretheiss.at/v1/satellites/25544/positions?timestamps=%s&units=miles'%i for i in out1]
+	return track_url
 
 def read_url_json(url):
+	"""
+        Function to retrieve location details from given URL
+            Parameters:
+                url: URL having the details of ISS
+            Returns:
+                details: Details of ISS at all timestamps in dictonary form
+	"""
 	req1 = urllib2.Request(url)
 	response1 = urllib2.urlopen(req1)
 	obj1 = json.loads(response1.read())
 	return obj1
 
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+	"""
+        Function to display a progress bar
+		printProgressBar(i + 1, lon.shape[0]-1, prefix = 'Calculating DESIS swath coordinates:', suffix = 'Complete ', length = 70)
+            Parameters:
+                iteration: Current iteration value
+		total: Total iteration value
+		prefix: Prefix text
+		suffix: Suffix Text
+		decimals: Number of decimals to be printed while displaying the progress percentage
+		length: Length of  
+		fill:
+		printEnd:
+            Returns:
+                None
+	"""
 	percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
 	filledLength = int(length * iteration // total)
 	bar = fill * filledLength + '-' * (length - filledLength)
@@ -143,7 +188,7 @@ if __name__ == "__main__":
 	
 	gen_times=generate_timestamps(start,end,minutes=minutes)
 	out=split_timestamps(gen_times)
-	urls1,track_urls=generate_urls(out)
+	track_urls=generate_urls(out)
 	loc=get_iss_location_details(track_urls)
 
 	lon=np.array([i['longitude'] for i in loc])
