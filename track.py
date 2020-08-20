@@ -77,9 +77,9 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 		prefix: Prefix text
 		suffix: Suffix Text
 		decimals: Number of decimals to be printed while displaying the progress percentage
-		length: Length of  
-		fill:
-		printEnd:
+		length: Percentage of screen covering the progress bar
+		fill: Fill character value in the progress bar
+		printEnd: Ending character. Eg. "\r"
             Returns:
                 None
 	"""
@@ -92,6 +92,13 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 
 
 def get_iss_location_details(url_json):
+	"""
+        Function to retrieve location details from list of URLs
+            Parameters:
+                url: List of URLs having the details of ISS
+            Returns:
+                details: Details of ISS at all timestamps from all URLS in dictonary form and showing progress bar
+	"""
 	loc2=[]
 	for i in range(len(track_urls)):
 		time.sleep(1.1)
@@ -102,6 +109,16 @@ def get_iss_location_details(url_json):
 	return loc
 
 def calc(fp,sp,theta,iss_altitude):
+	"""
+        Calculation of DESIS swath latitude longitude
+            Parameters:
+                fp: Latitude-Longitude of the first location
+                sp: Latitude-Longitude of the second location
+                theta: Angle (in degree) of the scanning instrument
+                iss_altitude: ISS altitude (in miles) over the first location
+            Returns:
+                sol: Latitude-Longitude of right and left side of the instrument
+	"""
 	altitude=iss_altitude*1.60934/111.11 # km
 	swath_distance=(theta/360)*2*np.pi*altitude
 	distance=math.sqrt((fp[0]-sp[0])**2 + (fp[1]-sp[1])**2)
@@ -112,7 +129,14 @@ def calc(fp,sp,theta,iss_altitude):
 	sol = solve((eq1, eq2),(x, y))
 	return(sol)
 
-def plot_iss_current_location(lon,lat,plt):
+def plot_iss_current_location(plt):
+	"""
+        Plotting of the current location of ISS
+            Parameters:
+                plt: Matplotlib figure handle
+            Returns:
+                None
+	"""
 	req = urllib2.Request("http://api.open-notify.org/iss-now.json")
 	response = urllib2.urlopen(req)
 	obj = json.loads(response.read())
@@ -122,6 +146,14 @@ def plot_iss_current_location(lon,lat,plt):
 	return plt
 
 def validate(date,format):
+	"""
+        Validation of given date and date format
+            Parameters:
+                date: Date stampt
+                format: Date format
+            Returns:
+                None
+	"""
 	try:
 		datetime.datetime.strptime(date,format)
 	except ValueError:
@@ -166,12 +198,13 @@ def calculate_desis_swath(lon,lat,altitude):
 	left_swath=np.concatenate([np.flip(np.vstack(left)[:,1]),np.vstack(right)[:,1]])
 	return right_swath, left_swath
 
-def iss_track_plot(lon,lat,a,b):
+def iss_track_plot(lon,lat,right,left):
 	fig = plt.figure(figsize=(12,6))
 	ax = plt.axes(projection=ccrs.PlateCarree())
 	ax.stock_img()
 	plt.plot(lon,lat,'k',transform=ccrs.Geodetic())
-	qw=plt.fill(a,b,facecolor='b',alpha=0.45,transform=ccrs.Geodetic())
+	qw=plt.fill(right,left,facecolor='b',alpha=0.45,transform=ccrs.Geodetic())
+	plt.plot(right,left,'r',transform=ccrs.Geodetic())
 	plt.grid(True)
 	gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=2, color='gray', alpha=0.5, linestyle='--')
 	gl.xlabels_top = True
@@ -179,7 +212,7 @@ def iss_track_plot(lon,lat,a,b):
 	gl.xlines = True
 	gl.xformatter = LONGITUDE_FORMATTER
 	gl.yformatter = LATITUDE_FORMATTER
-	plot_iss_current_location(lon,lat,plt)
+	plot_iss_current_location(plt)
 	return plt
 
 
