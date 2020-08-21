@@ -1,5 +1,24 @@
 # ISStrack
-Plot the current, past, or future tracks of the International Space Station
+
+## Description
+User can plot the current, past, or future tracks of the International Space Station, overlapped with the swath of DLR Earth Sensing Imaging Spectrometer (DESIS).
+
+## Required Libraries
+sys, math, itertools, time, datetime, json, argparse, numpy, sympy, matplotlib, urllib, cartopy
+
+## Arguments
+This tool needs 4 optional arguments as follows,
+
+1. startdate: Start date of ISS track which user wishes to plot
+
+2. enddate: End date of ISS track which user wishes to plot
+
+3. dateformat: Date format of the entered startdate and enddate. Both startdate and enddate should be in the same format.
+
+4. minutes: Minutes in which user needs to retrieve the ISS location.
+
+If the user does not provide any of the optional arguments, then this tool will plot the ISS track of 1 hour prior to the current UTC time to the 1 hour later of the current UTC time with the time interval of 5 minutes.
+
 ## Example
 
 1. User needs to specify start_date, end_date, dateformat and interval minutes as arguments
