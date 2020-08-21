@@ -161,8 +161,12 @@ def validate(date,format):
 
 def parse_arguments():
 	format="%d-%m-%Y-%H:%M:%S"
-	start = datetime.datetime.strptime("18-09-2019-07:00:00", format)
-	end = datetime.datetime.strptime("18-09-2019-09:00:00", format)
+	#start = datetime.datetime.strptime("18-09-2019-07:00:00", format)
+	#end = datetime.datetime.strptime("18-09-2019-09:00:00", format)
+	current_time=datetime.datetime.utcnow()
+	timedelta=datetime.timedelta(hours=6)
+	start = (current_time-timedelta).strftime(format)
+	end = (current_time+timedelta).strftime(format)
 	minutes=5
 
 	parser = argparse.ArgumentParser(description="Need to pass arguments as start and end date, fate format, and the interval in minutes.")
@@ -187,11 +191,19 @@ def calculate_desis_swath(lon,lat,altitude):
 		right_latlon=calc(fp,sp,right_swath_angle,altitude[i])
 		left_latlon=calc(fp,sp,left_swath_angle,altitude[i])
 		if fp[1]>=sp[1]:
-			right.append(right_latlon[0])
-			left.append(left_latlon[1])
+			if sp[0]-fp[0]<=0:
+				right.append(right_latlon[1])
+				left.append(left_latlon[0])
+			else:
+				right.append(right_latlon[0])
+				left.append(left_latlon[1])
 		else:
-			right.append(right_latlon[1])
-			left.append(left_latlon[0])
+			if sp[0]-fp[0]<=0:
+				right.append(right_latlon[0])
+				left.append(left_latlon[1])
+			else:
+				right.append(right_latlon[1])
+				left.append(left_latlon[0])
 		printProgressBar(i + 1, lon.shape[0]-1, prefix = 'Calculating DESIS swath coordinates:', suffix = 'Complete ', length = 70)
 
 	right_swath=np.concatenate([np.flip(np.vstack(left)[:,0]),np.vstack(right)[:,0]])
@@ -204,8 +216,9 @@ def iss_track_plot(lon,lat,right,left):
 	ax.stock_img()
 	plt.plot(lon,lat,'k',transform=ccrs.Geodetic())
 	qw=plt.fill(right,left,facecolor='b',alpha=0.45,transform=ccrs.Geodetic())
-	plt.plot(right,left,'r',transform=ccrs.Geodetic())
+	#plt.plot(right,left,'r',transform=ccrs.Geodetic())
 	plt.grid(True)
+	#ax.set_ylim(-60,60)
 	gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=2, color='gray', alpha=0.5, linestyle='--')
 	gl.xlabels_top = True
 	gl.ylabels_left = True
