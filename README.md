@@ -32,4 +32,5 @@ If the user does not provide any of the optional arguments, then this tool will 
 `$python  iss_tracker.py`
 
 ## Methodology for the calculation of DESIS swath 
- h<sub>&theta;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
+ 
+![methodology](https://github.com/ankurk017/ISStrack/blob/master/Sample_track/calculation.jpg)
