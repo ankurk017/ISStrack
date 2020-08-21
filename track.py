@@ -120,7 +120,8 @@ def calc(fp,sp,theta,iss_altitude):
                 sol: Latitude-Longitude of right and left side of the instrument
 	"""
 	altitude=iss_altitude*1.60934/111.11 # km
-	swath_distance=(theta/360)*2*np.pi*altitude
+	#swath_distance=(theta/360)*2*np.pi*altitude
+	swath_distance=altitude*np.tan(theta*np.pi/180)
 	distance=math.sqrt((fp[0]-sp[0])**2 + (fp[1]-sp[1])**2)
 	angular_distance=math.sqrt(distance**2 + swath_distance**2)
 	x,y = symbols ('x y')
@@ -242,6 +243,4 @@ if __name__ == "__main__":
 	altitude=np.array([i['altitude'] for i in loc])
 
 	right_swath,left_swath=calculate_desis_swath(lon,lat,altitude)	
-	plt=iss_track_plot(lon,lat,right_swath,left_swath)
-	plt.show()
-
+	plt=iss_track_
