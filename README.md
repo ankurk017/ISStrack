@@ -19,17 +19,17 @@ This tool needs 4 optional arguments as follows,
 
 If the user does not provide any of the optional arguments, then this tool will plot the ISS track of 1 hour prior to the current UTC time to the 1 hour later of the current UTC time with the time interval of 5 minutes.
 
-## Example
+## Examples
 
 1. User needs to specify start_date, end_date, dateformat and interval minutes as arguments
 
 `$python  iss_tracker.py --startdate='18-09-2019-07:00:00' --enddate='18-09-2019-08:30:00' --dateformat='%d-%m-%Y-%H:%M:%S' --minutes=1`
 
-
-
-
-![Sample ISS track for one day](https://github.com/ankurk017/ISStrack/blob/master/Sample_track/ISS_track.png)
-
-
 ![Sample ISS track overlapped with DESIS swath for one day](https://github.com/ankurk017/ISStrack/blob/master/Sample_track/Sample_plot2.jpeg)
 
+2. User can chose not to provide any arguments
+
+`$python  iss_tracker.py`
+
+## Methodology for the calculation of DESIS swath 
+ h<sub>&theta;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
