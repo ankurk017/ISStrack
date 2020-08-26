@@ -226,9 +226,6 @@ def validate(date, format):
 def parse_arguments():
     date_format = "%d-%m-%Y-%H:%M:%S"
 
-    # start = datetime.datetime.strptime("18-09-2019-07:00:00", format)
-    # end = datetime.datetime.strptime("18-09-2019-09:00:00", format)
-
     current_time = datetime.datetime.utcnow()
     timedelta = datetime.timedelta(hours=6)
     start = (current_time-timedelta).strftime(date_format)
