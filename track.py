@@ -29,7 +29,7 @@ def generate_timestamps(start, end, minutes=10):
     start_epoch = int(start.timestamp())
     end_epoch = int(end.timestamp())
 
-    time_span_in_seconds = end_epoch-start_epoch
+    time_span_in_seconds = end_epoch - start_epoch
     timestamps = np.arange(start_epoch, end_epoch, minutes*60)
 
     return timestamps
