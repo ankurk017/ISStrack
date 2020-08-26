@@ -23,7 +23,7 @@ def generate_timestamps(start, end, minutes=10):
             end (str): End date of the ISS track
             minutes (int): This is an optional argument. If not provided, default value will be considered. This is the interval time (in minutes) which user needs to retrieve location.
         Returns:
-            timestamps: Timestamps in epoch  
+            timestamps: Timestamps in epoch
     """
 
     start_epoch = int(start.timestamp())
@@ -39,7 +39,7 @@ def split_timestamps(array):
     """
     Function to split epoch timestamps (generated from generate_timestamps function) in the sets of 10. This is because API takes maximum 10 timestamps to retrieve location at one go.
         Parameters:
-            array: Array contains the list of timestamps 
+            array: Array contains the list of timestamps
         Returns:
             split_time: Array contains the timestamps in the sets of 10
     """
@@ -91,7 +91,8 @@ def read_url_json(url):
 def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
     """
     Function to display a progress bar
-            printProgressBar(i + 1, lon.shape[0]-1, prefix = 'Calculating DESIS swath coordinates:', suffix = 'Complete ', length = 70)
+            printProgressBar(
+                i + 1, lon.shape[0]-1, prefix = 'Calculating DESIS swath coordinates:', suffix = 'Complete ', length = 70)
         Parameters:
             iteration: Current iteration value
             total: Total iteration value
@@ -105,9 +106,9 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
             None
     """
 
-    percent = ("{0:." + str(decimals) + "f}").format(
-        100 * (iteration / float(total))
-    )
+    # calculate percentage in 2 decimal places
+    percent = 100 * (iteration / float(total))
+    percent = f'{percent:.{decimal}f}'
 
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
