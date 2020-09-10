@@ -33,7 +33,7 @@ If the user does not provide any of the optional arguments, then this tool will 
 
 ![Sample ISS track overlapped with DESIS swath for one day](https://github.com/ankurk017/ISStrack/blob/master/Sample_track/Figure1_git.png)
 
-3. User can chose not to provide any arguments
+3. User can chose not to provide any arguments. If not provided, program will automatically take 1 hour prior to the current time as the start_date, 1 hour later to the current time as the end_date, and temp_res as 5 minutes.
 
 `$python  iss_tracker.py`
 
